@@ -1,4 +1,4 @@
 FROM ghcr.io/collabora/whisperlive-gpu:latest
-RUN pip install --no-cache-dir whisperlive
-ENTRYPOINT ["whisperlive"]
-CMD ["--port","9090","--backend","faster-whisper","--max_clients","50","--max_connection_time","600","--model","openai/whisper-large-v3-turbo","--compute_type","auto"]
+# (선택) 모델 미리 받아 캐시 워밍업 — 실패해도 빌드 계속
+RUN python3 /app/run_server.py --download-model openai/whisper-large-v3-turbo || true
+# ENTRYPOINT/CMD 건드리지 않음
