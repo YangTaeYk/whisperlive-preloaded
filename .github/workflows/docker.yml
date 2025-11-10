@@ -1,4 +1,4 @@
-name: Build and Push to GHCR
+name: Build and Push to GHCR and DockerHub
 
 on:
   push:
@@ -8,23 +8,40 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      packages: write
       contents: read
+      packages: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
+      # Log in to GHCR
       - name: Log in to GHCR
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Build and push Docker image
+
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Build and push to GHCR
+      - name: Build and push to GHCR
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
           tags: ghcr.io/yangtaeyk/whisperlive-preloaded:latest
+
+      # Build and push to Docker Hub
+      - name: Build and push to Docker Hub
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: yangtaeyk/whisperlive-preloaded:latest
