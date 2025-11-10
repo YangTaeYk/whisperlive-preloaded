@@ -44,4 +44,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: yangtaeyk/whisperlive-preloaded:latest
+          tags: williamyang1992/whisperlive-preloaded:latest
